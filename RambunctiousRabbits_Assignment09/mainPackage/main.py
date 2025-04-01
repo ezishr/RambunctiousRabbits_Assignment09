@@ -17,6 +17,7 @@ import random
 
 if __name__ == "__main__":
     dbm = DatabaseManagement()
+
     conn = dbm.connect_to_database()
     product_query = dbm.submit_sql_to_server(conn, 'SELECT ProductID, [UPC-A ], Description, ManufacturerID, BrandID FROM tProduct')
     product_query_result = product_query.fetchall()
