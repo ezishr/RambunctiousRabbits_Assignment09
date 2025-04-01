@@ -1,5 +1,6 @@
 # databaseManagement.py
 from ast import Try
+from calendar import c
 import pyodbc
 
 class DatabaseManagement:
@@ -18,12 +19,11 @@ class DatabaseManagement:
             return conn
 
         except:
-            # What do we do if we end up here?
             print('Unable to connect to database')
             return None
 
 
-    def submit_sql_to_server(self, conn, sql_statement):
+    def submit_sql_to_server(self, conn, sql_statement, params = None):
         """
         Submit a SQL statement to SQL Server
         @param conn: connection object
@@ -31,5 +31,8 @@ class DatabaseManagement:
         @return: the pyodbc cursor
         """
         cursor = conn.cursor()
-        cursor.execute(sql_statement)
+        if params:
+            cursor.execute(sql_statement, params)
+        else:
+            cursor.execute(sql_statement)
         return cursor
