@@ -49,7 +49,8 @@ if __name__ == "__main__":
    
     # Substitute product ID into query from step 2
     substituted_product_query = dbm.submit_sql_to_server(conn, 'SELECT TOP (100) PERCENT SUM(dbo.tTransactionDetail.QtyOfProduct) AS NumberOfItemsSold FROM dbo.tTransactionDetail INNER JOIN dbo.tTransaction ON dbo.tTransactionDetail.TransactionID = dbo.tTransaction.TransactionID WHERE (dbo.tTransaction.TransactionTypeID = 1) AND (dbo.tTransactionDetail.ProductID = ?)', (product_id,))
-    for row in substituted_product_query:
-        number_of_items_sold = row[0]
+    
+    number_of_items_sold = substituted_product_query.fetchone()[0]
+    
     # Print statement
     print(f'Product Description: {product_description}, Manufacturer: {manufacturer_name}, Brand: {brand_name}, Number of Items Sold: {number_of_items_sold}')
