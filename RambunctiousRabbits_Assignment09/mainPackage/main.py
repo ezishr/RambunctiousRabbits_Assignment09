@@ -1,10 +1,10 @@
 # File Name: main.py
-# Student Name: Peter Phan, Eirlys Vo
-# email: phanpv@mail.uc.edu, vopq@mail.uc.edu
+# Student Name: Peter Phan, Eirlys Vo, Nathan Sharpe
+# email: phanpv@mail.uc.edu, vopq@mail.uc.edu, sharpenn@mail.uc.edu
 # Assignment Number: Assignment 09
 # Due Date: 04/03/2025
 # Course #/Section: IS4010-001
-# Semester/Year:     2025
+# Semester/Year: Spring 2025
 # Brief Description of the assignment: Develop a VS project to access a SQL server instance to extract some data from Grocery Store Simulator database and produce interesting results. 
 # Brief Description of what this module does: Learn about accessing a database and producing results from the data. 
 # Citations: Stack Overflow: https://stackoverflow.com/questions/28981770/store-sql-result-in-a-variable-in-python
@@ -39,7 +39,6 @@ if __name__ == "__main__":
     # Fetch the first Manufactere name if exists  
     manufacturer_result = manufacturer_query.fetchone()
     manufacturer_name = manufacturer_result[0] if manufacturer_result else "Unknown Manufacturer"
-    print(f'Manufacturer: {manufacturer_name}')
 
 
     # Submit query to get the Brand name from row 5
@@ -47,6 +46,10 @@ if __name__ == "__main__":
     # Fetch the first Brand name if exists
     brand_result = brand_query.fetchone()
     brand_name = brand_result[0] if brand_result else "Unknown Brand"
-    print(f'Brand: {brand_name}')
    
-
+    # Substitute product ID into query from step 2
+    substituted_product_query = dbm.submit_sql_to_server(conn, 'SELECT TOP (100) PERCENT SUM(dbo.tTransactionDetail.QtyOfProduct) AS NumberOfItemsSold FROM dbo.tTransactionDetail INNER JOIN dbo.tTransaction ON dbo.tTransactionDetail.TransactionID = dbo.tTransaction.TransactionID WHERE (dbo.tTransaction.TransactionTypeID = 1) AND (dbo.tTransactionDetail.ProductID = ?)', (product_id,))
+    for row in substituted_product_query:
+        number_of_items_sold = row[0]
+    # Print statement
+    print(f'Product Description: {product_description}, Manufacturer: {manufacturer_name}, Brand: {brand_name}, Number of Items Sold: {number_of_items_sold}')
