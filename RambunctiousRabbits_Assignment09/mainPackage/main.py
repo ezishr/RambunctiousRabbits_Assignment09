@@ -18,32 +18,36 @@ import random
 if __name__ == "__main__":
     dbm = DatabaseManagement()
 
+    # Connect to the database
     conn = dbm.connect_to_database()
+
+    # Submit query to get the ProductID, UPC-A, Description, ManufacturerID, and BrandID from tProduct
     product_query = dbm.submit_sql_to_server(conn, 'SELECT ProductID, [UPC-A ], Description, ManufacturerID, BrandID FROM tProduct')
+
+    # Fetch all rows from the query
     product_query_result = product_query.fetchall()
 
-
+    # Select a random row from the query result
     selected_row_number = random.randint(0, len(product_query_result) - 1)
     selected_row_data = product_query_result[selected_row_number]
 
+    # Extract the product required information from the selected row
     product_description = selected_row_data[2]
-
     product_id = selected_row_data[0]
-
     manufacturer_id = selected_row_data[3]
-
     brand_id = selected_row_data[4]
 
     # Submit query to get the Manufacturer name from row 5
     manufacturer_query = dbm.submit_sql_to_server(conn, 'SELECT Manufacturer FROM tManufacturer WHERE ManufacturerID = ?', (manufacturer_id,))
+
     # Fetch the first Manufactere name if exists  
     manufacturer_result = manufacturer_query.fetchone()
     manufacturer_name = manufacturer_result[0] if manufacturer_result else "Unknown Manufacturer"
 
-
-    # Submit query to get the Brand name from row 5
+    # Submit query to get the Brand name using existing brand_id
     brand_query = dbm.submit_sql_to_server(conn, 'SELECT Brand FROM tBrand WHERE BrandID = ?', (brand_id,))
-    # Fetch the first Brand name if exists
+
+    # Fetch the Brand name if exists
     brand_result = brand_query.fetchone()
     brand_name = brand_result[0] if brand_result else "Unknown Brand"
    
